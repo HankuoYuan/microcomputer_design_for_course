@@ -1,0 +1,54 @@
+ORG 0000H
+AJMP START
+START:
+    MOV A,#0F9H;led顺序显示
+    MOV P0,A
+    MOV A,#0A4H
+    MOV P1,A
+    MOV A,#0B0H
+    MOV P2,A
+    ACALL DELAY;延时
+    MOV A,#099H
+    MOV P0,A
+    MOV A,#092H
+    MOV P1,A
+    MOV A,#082H
+    MOV P2,A
+    ACALL DELAY
+    MOV A,#0F8H
+    MOV P0,A
+    MOV A,#80H
+    MOV P1,A
+    MOV A,#90H
+    MOV P2,A
+    ACALL DELAY
+    MOV A,#88H
+    MOV P0,A
+    MOV A,#83H
+    MOV P1,A
+    MOV A,#0C6H
+    MOV P2,A
+    ACALL DELAY
+    MOV A,#0A1H
+    MOV P0,A
+    MOV A,#86H
+    MOV P1,A
+    MOV A,#8EH
+    MOV P2,A
+    ACALL DELAY
+    AJMP START;无限循环显示
+DELAY: MOV R2,#30H ;延时长短设置
+    ACALL DELAY0 
+    RET 
+DELAY0: PUSH 02H ;延时子程序
+DELAY1: PUSH 02H 
+DELAY2: PUSH 02H 
+DELAY3: DJNZ R2,DELAY3 
+    POP 02H 
+    DJNZ R2,DELAY2 
+    POP 02H 
+    DJNZ R2,DELAY1 
+    POP 02H 
+    DJNZ R2,DELAY0 
+    RET
+END

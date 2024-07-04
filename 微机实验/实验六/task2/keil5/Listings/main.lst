@@ -1,0 +1,83 @@
+A51 MACRO ASSEMBLER  MAIN                                                                 05/27/2024 21:49:31 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\main.obj
+ASSEMBLER INVOKED BY: D:\software\Keil_v5\C51\BIN\A51.EXE main.a51 SET(SMALL) DEBUG PRINT(.\Listings\main.lst) OBJECT(.\
+                      Objects\main.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     ORG 0000H
+0000 0102              2     AJMP DISPLAY
+0002                   3     DISPLAY:
+0002 74A4              4         MOV A,#0A4H;8Œª ¬Îπ‹“¿¥Œ∏≥÷µ
+0004 758001            5         MOV P0,#01
+0007 F5A0              6         MOV P2,A
+0009 114C              7         ACALL DELAY;∂Ã—” ±£¨Ã·∏ﬂÀ¢–¬ÀŸ¬ 
+000B 74C0              8         MOV A,#0C0H
+000D 758002            9         MOV P0,#02
+0010 F5A0             10         MOV P2,A
+0012 114C             11         ACALL DELAY
+0014 74A4             12         MOV A,#0A4H
+0016 758004           13         MOV P0,#04
+0019 F5A0             14         MOV P2,A
+001B 114C             15         ACALL DELAY
+001D 7499             16         MOV A,#99H
+001F 758008           17         MOV P0,#08
+0022 F5A0             18         MOV P2,A
+0024 114C             19         ACALL DELAY
+0026 74C0             20         MOV A,#0C0H
+0028 758010           21         MOV P0,#16
+002B F5A0             22         MOV P2,A
+002D 114C             23         ACALL DELAY
+002F 7492             24         MOV A,#92H
+0031 758020           25         MOV P0,#32
+0034 F5A0             26         MOV P2,A
+0036 114C             27         ACALL DELAY
+0038 74A4             28         MOV A,#0A4H
+003A 758040           29         MOV P0,#64
+003D F5A0             30         MOV P2,A
+003F 114C             31         ACALL DELAY
+0041 74F8             32         MOV A,#0F8H
+0043 758080           33         MOV P0,#128
+0046 F5A0             34         MOV P2,A
+0048 114C             35         ACALL DELAY
+004A 0102             36         AJMP DISPLAY;Œﬁœﬁ—≠ª∑£¨∑¥∏¥À¢–¬8Œª ¬Îπ‹
+004C 7A05             37     DELAY: MOV R2,#5;…Ë÷√—” ±≥§∂Ã
+004E 1151             38         ACALL DELAY0 
+0050 22               39         RET 
+0051 C002             40     DELAY0: PUSH 02H ;—” ±◊”≥Ã–Ú
+0053 C002             41     DELAY1: PUSH 02H 
+0055 C002             42     DELAY2: PUSH 02H 
+0057 DAFE             43     DELAY3: DJNZ R2,DELAY3 
+0059 D002             44         POP 02H 
+005B DAF8             45         DJNZ R2,DELAY2 
+005D D002             46         POP 02H 
+005F DAF2             47         DJNZ R2,DELAY1 
+0061 D002             48         POP 02H 
+0063 DAEC             49         DJNZ R2,DELAY0 
+0065 22               50         RET
+                      51     END
+A51 MACRO ASSEMBLER  MAIN                                                                 05/27/2024 21:49:31 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+DELAY. . . . . . .  C ADDR   004CH   A   
+DELAY0 . . . . . .  C ADDR   0051H   A   
+DELAY1 . . . . . .  C ADDR   0053H   A   
+DELAY2 . . . . . .  C ADDR   0055H   A   
+DELAY3 . . . . . .  C ADDR   0057H   A   
+DISPLAY. . . . . .  C ADDR   0002H   A   
+P0 . . . . . . . .  D ADDR   0080H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

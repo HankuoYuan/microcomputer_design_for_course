@@ -1,0 +1,117 @@
+A51 MACRO ASSEMBLER  MAIN                                                                 05/24/2024 10:40:43 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\main.obj
+ASSEMBLER INVOKED BY: D:\software\Keil_v5\C51\BIN\A51.EXE main.a51 SET(SMALL) DEBUG PRINT(.\Listings\main.lst) OBJECT(.\
+                      Objects\main.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     ;以下代码可以实现一个定时器产生周期为0.2和1s的两个方波脉冲
+0000                   2     ORG 0000H 
+0000 7406              3     MOV A,#6;
+0002                   4     START: 
+0002 0130              5         AJMP MAIN ;跳入主程序 
+000B                   6         ORG 000BH 
+000B 0141              7         AJMP INT_T0 ;定时器 0 中断程序 
+0030                   8         ORG 0030H 
+0030                   9     MAIN: 
+0030 758901           10         MOV TMOD,#01H ;设定时器 T0 为 16 位定时器 
+0033 758C3C           11         MOV TH0,#3CH ;设定 T0 的定时值(0.1s) 
+0036 758AB0           12         MOV TL0,#0B0H 
+0039 D28C             13         SETB TR0 ;启动定时器 T0 
+003B D2A9             14         SETB ET0 
+003D D2AF             15         SETB EA 
+003F                  16     MAIN_1: 
+003F 80FE             17         SJMP MAIN_1 
+0041                  18     INT_T0: 
+0041 14               19         DEC A;
+0042 6011             20         JZ PWM2;
+0044                  21     GETTIN:
+0044 C0E0             22         PUSH ACC ;保护现场 
+0046 C0D0             23         PUSH PSW 
+0048 758C3C           24         MOV TH0,#3CH ;设定 T0 的定时值(0.1s)
+004B 758AB0           25         MOV TL0,#0B0H
+004E B2A5             26         CPL P2.5 
+0050 D0D0             27         POP PSW ;恢复现场 
+0052 D0E0             28         POP ACC 
+0054 32               29         RETI
+0055                  30     PWM2:
+0055 7405             31         MOV A,#5;
+0057 B2A6             32         CPL P2.6;
+0059 0144             33         AJMP GETTIN;
+                      34     END
+                             ;
+                             ;下面是思考题的代码，同时输出38k和1k的脉冲，但38k检测不出来，波形仿真好像最高是5khz。
+                             ;ORG 0000H 
+                             ;START: 
+                                 ;AJMP MAIN ;跳入主程序 
+                                 ;ORG 000BH 
+                                 ;AJMP INT_T0 ;定时器 0 中断程序
+                                 ;ORG 001BH
+                                 ;AJMP INT_T1;
+                                 ;ORG 0030H 
+                             ;MAIN: 
+                                 ;MOV TMOD,#01H ;设定时器 T0 为 16 位定时器 
+                                 ;MOV TH0,#0FFH ;设定 T0 的定时值(0.1s) 
+                                 ;MOV TL0,#006H 
+                                 ;SETB TR0 ;启动定时器 T0 
+                                 ;SETB ET0 
+                                 ;SETB EA
+                                 ;MOV TH1,#0FFH ;设定 T0 的定时值(0.1s) 
+                                 ;MOV TL1,#0FAH 
+                                 ;SETB TR1 ;启动定时器 T0 
+                                 ;SETB ET1
+                             ;MAIN_1: 
+                                 ;SJMP MAIN_1 
+A51 MACRO ASSEMBLER  MAIN                                                                 05/24/2024 10:40:43 PAGE     2
+
+                             ;INT_T0: 
+                                 ;PUSH ACC ;保护现场 
+                                 ;PUSH PSW 
+                                 ;MOV TH0,#0FFH ;设定 T0 的定时值(0.1s)
+                                 ;MOV TL0,#006H
+                                 ;CPL P2.5 
+                                 ;POP PSW ;恢复现场 
+                                 ;POP ACC 
+                                 ;RETI
+                             ;INT_T1:
+                                 ;PUSH ACC ;保护现场 
+                                 ;PUSH PSW
+                                 ;MOV TH1,#0FFH
+                                 ;MOV TL1,#0FAH
+                                 ;CPL P2.6
+                                 ;POP PSW ;恢复现场 
+                                 ;POP ACC 
+                                 ;RETI
+                             ;END
+A51 MACRO ASSEMBLER  MAIN                                                                 05/24/2024 10:40:43 PAGE     3
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+ACC. . . . . . . .  D ADDR   00E0H   A   
+EA . . . . . . . .  B ADDR   00A8H.7 A   
+ET0. . . . . . . .  B ADDR   00A8H.1 A   
+GETTIN . . . . . .  C ADDR   0044H   A   
+INT_T0 . . . . . .  C ADDR   0041H   A   
+MAIN . . . . . . .  C ADDR   0030H   A   
+MAIN_1 . . . . . .  C ADDR   003FH   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+PSW. . . . . . . .  D ADDR   00D0H   A   
+PWM2 . . . . . . .  C ADDR   0055H   A   
+START. . . . . . .  C ADDR   0002H   A   
+TH0. . . . . . . .  D ADDR   008CH   A   
+TL0. . . . . . . .  D ADDR   008AH   A   
+TMOD . . . . . . .  D ADDR   0089H   A   
+TR0. . . . . . . .  B ADDR   0088H.4 A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

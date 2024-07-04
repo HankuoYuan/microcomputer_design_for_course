@@ -1,0 +1,51 @@
+ORG 0000H
+AJMP DISPLAY
+DISPLAY:
+    MOV A,#0A4H;8位数码管依次赋值
+    MOV P0,#01
+    MOV P2,A
+    ACALL DELAY;短延时，提高刷新速率
+    MOV A,#0C0H
+    MOV P0,#02
+    MOV P2,A
+    ACALL DELAY
+    MOV A,#0A4H
+    MOV P0,#04
+    MOV P2,A
+    ACALL DELAY
+    MOV A,#99H
+    MOV P0,#08
+    MOV P2,A
+    ACALL DELAY
+    MOV A,#0C0H
+    MOV P0,#16
+    MOV P2,A
+    ACALL DELAY
+    MOV A,#92H
+    MOV P0,#32
+    MOV P2,A
+    ACALL DELAY
+    MOV A,#0A4H
+    MOV P0,#64
+    MOV P2,A
+    ACALL DELAY
+    MOV A,#0F8H
+    MOV P0,#128
+    MOV P2,A
+    ACALL DELAY
+    AJMP DISPLAY;无限循环，反复刷新8位数码管
+DELAY: MOV R2,#5;设置延时长短
+    ACALL DELAY0 
+    RET 
+DELAY0: PUSH 02H ;延时子程序
+DELAY1: PUSH 02H 
+DELAY2: PUSH 02H 
+DELAY3: DJNZ R2,DELAY3 
+    POP 02H 
+    DJNZ R2,DELAY2 
+    POP 02H 
+    DJNZ R2,DELAY1 
+    POP 02H 
+    DJNZ R2,DELAY0 
+    RET
+END

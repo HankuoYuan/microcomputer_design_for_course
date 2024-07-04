@@ -1,0 +1,405 @@
+C51 COMPILER V9.59.0.0   MAIN                                                              07/03/2024 22:43:26 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: D:\software\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          //平台：HJ-4WD/HJ-E/HL-1智能小车 + Keil U4 + STC89C52
+   2          //晶振:11.0592MHZ
+   3          
+   4          #include<AT89x52.H>
+   5          #include <intrins.h>   //包含nop等系统函数
+   6          
+   7          //HL-1小车驱动接线定义
+   8          #define Left_moto_go      {P1_2=1,P1_3=0;}    //左边电机向前走
+   9          #define Left_moto_back    {P1_2=0,P1_3=1;}    //左边电机向后转
+  10          #define Left_moto_Stop    {P1_2=0,P1_3=0;}    //左边电机停转
+  11          #define Right_moto_go     {P1_6=1,P1_7=0;}    //右边电机向前走
+  12          #define Right_moto_back   {P1_6=0,P1_7=1;}    //右边电机向后走
+  13          #define Right_moto_Stop   {P1_6=0,P1_7=0;}    //右边电机停转
+  14          
+  15          #define left     'L'//Left
+  16          #define right    'R'//Right
+  17          #define forward       'F'//Forward
+  18          #define backward     'B'//Backward
+  19          #define stop     'S'//Stop
+  20          
+  21          #define LCM_Data  P0   //定义液晶屏数据口
+  22          #define Busy    0x80   //用于检测LCM状态字中的Busy标识
+  23          
+  24          
+  25          sbit LCM_RW = P1 ^ 1 ; //定义LCD引脚
+  26          sbit LCM_RS = P1 ^ 0 ;
+  27          sbit LCM_E = P2 ^ 5  ;
+  28          
+  29          char code str_f[] =  "收到指令，向前!\n";
+  30          char code str_b[] = "收到指令，向后!\n";
+  31          char code str_l[] = "收到指令，向左!\n";
+  32          char code str_r[] = "收到指令，向右!\n";
+  33          char code str_s[] = "收到指令，停止!\n";
+  34          
+  35          unsigned char code header[] = "=SportSituation="; //LCD1602显示格式
+  36          unsigned char code table_f[] = "    Forward    ";
+  37          unsigned char code table_b[] = "    Backward    ";
+  38          unsigned char code table_l[] = "      Left      ";
+  39          unsigned char code table_r[] = "     Right     ";
+  40          unsigned char code table_s[] = "      Stop      ";
+  41          unsigned char code clear[] = "                ";
+  42          
+  43          
+  44          bit  flag_REC = 0;
+  45          bit  flag    = 0;
+  46          
+  47          
+  48          unsigned char  i = 0;
+  49          unsigned char  dat = 0;
+  50          unsigned char  buff[5] = 0; //接收缓冲字节
+  51          
+  52          
+  53          //延时函数
+  54          void delay(unsigned int k)
+  55          {
+C51 COMPILER V9.59.0.0   MAIN                                                              07/03/2024 22:43:26 PAGE 2   
+
+  56   1          unsigned int x, y;
+  57   1          for (x = 0; x < k; x++)
+  58   1              for (y = 0; y < 2000; y++);
+  59   1      }
+  60          
+  61          void Delay10us(unsigned char i)     //10us延时函数 启动超声波模块时使用
+  62          {
+  63   1          unsigned char j;
+  64   1          do
+  65   1          {
+  66   2              j = 10;
+  67   2              do
+  68   2              {
+  69   3                  _nop_();
+  70   3              }
+  71   2              while (--j);
+  72   2          }
+  73   1          while (--i);
+  74   1      }
+  75          
+  76          /************************************LCD1602液晶屏驱动函数************************************************
+             -/
+  77          //*******************读状态*************************//
+  78          unsigned char ReadStatusLCM(void)
+  79          {
+  80   1          LCM_Data = 0xFF;
+  81   1          LCM_RS = 0;
+  82   1          Delay10us(1);
+  83   1          LCM_RW = 1;
+  84   1          Delay10us(1);
+  85   1          do
+  86   1          {
+  87   2              LCM_E = 0;
+  88   2              Delay10us(1);
+  89   2              LCM_E = 0;
+  90   2              Delay10us(1);
+  91   2              LCM_E = 1;
+  92   2              Delay10us(1);
+  93   2          }
+  94   1          while (LCM_Data & Busy); //检测忙信号
+  95   1          return (LCM_Data);
+  96   1      }
+  97          
+  98          /****************写数据************************/
+  99          void WriteDataLCM(unsigned char WDLCM)
+ 100          {
+ 101   1          ReadStatusLCM(); //检测忙
+ 102   1          LCM_Data = WDLCM;
+ 103   1          LCM_RS = 1;
+ 104   1          Delay10us(1);
+ 105   1          LCM_RW = 0;
+ 106   1          Delay10us(1);
+ 107   1          LCM_E = 0; //若晶振速度太高可以在这后加小的延时
+ 108   1          Delay10us(1);
+ 109   1          LCM_E = 0; //延时
+ 110   1          Delay10us(1);
+ 111   1          LCM_E = 1;
+ 112   1          Delay10us(1);
+ 113   1      }
+ 114          
+ 115          //****************写指令*************************//
+ 116          void WriteCommandLCM(unsigned char WCLCM, BuysC) //BuysC为0时忽略忙检测
+C51 COMPILER V9.59.0.0   MAIN                                                              07/03/2024 22:43:26 PAGE 3   
+
+ 117          {
+ 118   1          if (BuysC) ReadStatusLCM(); //根据需要检测忙
+ 119   1          LCM_Data = WCLCM;
+ 120   1          LCM_RS = 0;
+ 121   1          Delay10us(1);
+ 122   1          LCM_RW = 0;
+ 123   1          Delay10us(1);
+ 124   1          LCM_E = 0;
+ 125   1          Delay10us(1);
+ 126   1          LCM_E = 0;
+ 127   1          Delay10us(1);
+ 128   1          LCM_E = 1;
+ 129   1          Delay10us(1);
+ 130   1      }
+ 131          
+ 132          
+ 133          
+ 134          //*******************LCM初始化**********************//
+ 135          void LCMInit(void)
+ 136          {
+ 137   1          LCM_Data = 0;
+ 138   1          WriteCommandLCM(0x38, 0); //三次显示模式设置，不检测忙信号
+ 139   1          delay(5);
+ 140   1          WriteCommandLCM(0x38, 0);
+ 141   1          delay(5);
+ 142   1          WriteCommandLCM(0x38, 0);
+ 143   1          delay(5);
+ 144   1      
+ 145   1          WriteCommandLCM(0x38, 1); //显示模式设置,开始要求每次检测忙信号
+ 146   1          WriteCommandLCM(0x08, 1); //关闭显示
+ 147   1          WriteCommandLCM(0x01, 1); //显示清屏
+ 148   1          WriteCommandLCM(0x06, 1); // 显示光标移动设置
+ 149   1          WriteCommandLCM(0x0c, 1); // 显示开及光标设置
+ 150   1      }
+ 151          
+ 152          //*********************按指定位置显示一个字符***********************//
+ 153          void DisplayOneChar(unsigned char X, unsigned char Y, unsigned char DData)
+ 154          {
+ 155   1          Y &= 0x1;
+ 156   1          X &= 0xF; //限制X不能大于15，Y不能大于1
+ 157   1          if (Y) X |= 0x40; //当要显示第二行时地址码+0x40;
+ 158   1          X |= 0x80; //算出指令码
+ 159   1          WriteCommandLCM(X, 1); //发命令字
+ 160   1          WriteDataLCM(DData); //发数据
+ 161   1      }
+ 162          
+ 163          //**********************按指定位置显示一串字符*************************//
+ 164          void DisplayListChar(unsigned char X, unsigned char Y, unsigned char code *DData)
+ 165          {
+ 166   1          unsigned char ListLength;
+ 167   1      
+ 168   1          ListLength = 0;
+ 169   1          Y &= 0x1;
+ 170   1          X &= 0xF; //限制X不能大于15，Y不能大于1
+ 171   1          while (DData[ListLength] > 0x19) //若到达字串尾则退出
+ 172   1          {
+ 173   2              if (X <= 0xF) //X坐标应小于0xF
+ 174   2              {
+ 175   3                  DisplayOneChar(X, Y, DData[ListLength]); //显示单个字符
+ 176   3                  ListLength++;
+ 177   3                  X++;
+ 178   3              }
+C51 COMPILER V9.59.0.0   MAIN                                                              07/03/2024 22:43:26 PAGE 4   
+
+ 179   2          }
+ 180   1      }
+ 181          
+ 182          
+ 183          /***************************************************************************/
+ 184          
+ 185          //字符串发送函数
+ 186          void send_str_f()
+ 187          // 传送字串
+ 188          {
+ 189   1          unsigned char i = 0;
+ 190   1          while (str_f[i] != '\0')
+ 191   1          {
+ 192   2              SBUF = str_f[i];
+ 193   2              while (!TI);               // 等特数据传送
+ 194   2              TI = 0;                    // 清除数据传送标志
+ 195   2              i++;                    // 下一个字符
+ 196   2          }
+ 197   1      }
+ 198          
+ 199          void send_str_b()
+ 200          // 传送字串
+ 201          {
+ 202   1          unsigned char i = 0;
+ 203   1          while (str_b[i] != '\0')
+ 204   1          {
+ 205   2              SBUF = str_b[i];
+ 206   2              while (!TI);               // 等特数据传送
+ 207   2              TI = 0;                    // 清除数据传送标志
+ 208   2              i++;                    // 下一个字符
+ 209   2          }
+ 210   1      }
+ 211          
+ 212          void send_str_l()
+ 213          // 传送字串
+ 214          {
+ 215   1          unsigned char i = 0;
+ 216   1          while (str_l[i] != '\0')
+ 217   1          {
+ 218   2              SBUF = str_l[i];
+ 219   2              while (!TI);               // 等特数据传送
+ 220   2              TI = 0;                    // 清除数据传送标志
+ 221   2              i++;                    // 下一个字符
+ 222   2          }
+ 223   1      }
+ 224          
+ 225          void send_str_r()
+ 226          // 传送字串
+ 227          {
+ 228   1          unsigned char i = 0;
+ 229   1          while (str_r[i] != '\0')
+ 230   1          {
+ 231   2              SBUF = str_r[i];
+ 232   2              while (!TI);               // 等特数据传送
+ 233   2              TI = 0;                    // 清除数据传送标志
+ 234   2              i++;                    // 下一个字符
+ 235   2          }
+ 236   1      }
+ 237          
+ 238          void send_str_s()
+ 239          // 传送字串
+ 240          {
+C51 COMPILER V9.59.0.0   MAIN                                                              07/03/2024 22:43:26 PAGE 5   
+
+ 241   1          unsigned char i = 0;
+ 242   1          while (str_s[i] != '\0')
+ 243   1          {
+ 244   2              SBUF = str_s[i];
+ 245   2              while (!TI);               // 等特数据传送
+ 246   2              TI = 0;                    // 清除数据传送标志
+ 247   2              i++;                    // 下一个字符
+ 248   2          }
+ 249   1      }
+ 250          //前速前进
+ 251          void  run(void)
+ 252          {
+ 253   1          Left_moto_go ;   //左电机往前走
+ 254   1          Right_moto_go ;  //右电机往前走
+ 255   1      }
+ 256          
+ 257          //前速后退
+ 258          void  backrun(void)
+ 259          {
+ 260   1      
+ 261   1          Left_moto_back ;   //左电机往后走
+ 262   1          Right_moto_back ;  //右电机往后走
+ 263   1      }
+ 264          
+ 265          //左转
+ 266          void  leftrun(void)
+ 267          {
+ 268   1          Left_moto_back ;   //左电机往前走
+ 269   1          Right_moto_go ;  //右电机往前走
+ 270   1      }
+ 271          
+ 272          //右转
+ 273          void  rightrun(void)
+ 274          {
+ 275   1          Left_moto_go ;   //左电机往前走
+ 276   1          Right_moto_back ;  //右电机往前走
+ 277   1      }
+ 278          //STOP
+ 279          void  stoprun(void)
+ 280          {
+ 281   1      
+ 282   1          Left_moto_Stop ;   //左电机往前走
+ 283   1          Right_moto_Stop ;  //右电机往前走
+ 284   1      }
+ 285          void sint() interrupt 4      //中断接收3个字节
+ 286          {
+ 287   1          if (RI)                    //是否接收中断
+ 288   1          {
+ 289   2              RI = 0;
+ 290   2              dat = SBUF;
+ 291   2              if (dat == 'O' && (i == 0)) //接收数据第一帧
+ 292   2              {
+ 293   3                  buff[i] = dat;
+ 294   3                  flag = 1;      //开始接收数据
+ 295   3              }
+ 296   2              else if (flag == 1)
+ 297   2              {
+ 298   3                  i++;
+ 299   3                  buff[i] = dat;
+ 300   3                  if (i >= 2)
+ 301   3                  {
+ 302   4                      i = 0;    // 停止接收
+C51 COMPILER V9.59.0.0   MAIN                                                              07/03/2024 22:43:26 PAGE 6   
+
+ 303   4                      flag = 0;
+ 304   4                      flag_REC = 1 ;
+ 305   4                  }
+ 306   3              }
+ 307   2          }
+ 308   1      }
+ 309          /*--主函数--*/
+ 310          void main(void)
+ 311          {
+ 312   1          delay(10); //启动等待，等LCM讲入工作状态
+ 313   1          LCMInit(); //LCM初始化
+ 314   1          delay(5);//延时片刻
+ 315   1          
+ 316   1          DisplayListChar(0, 0, header);
+ 317   1          DisplayListChar(0, 1, table_s);
+ 318   1          
+ 319   1          TMOD = 0x20;
+ 320   1          TH1 = 0xFd;           //11.0592M晶振，9600波特率
+ 321   1          TL1 = 0xFd;
+ 322   1          SCON = 0x50;
+ 323   1          PCON = 0x00;
+ 324   1          TR1 = 1;
+ 325   1          ES = 1;
+ 326   1          EA = 1;
+ 327   1      
+ 328   1          while (1)                           /*无限循环*/
+ 329   1          {
+ 330   2              if (flag_REC == 1)
+ 331   2              {
+ 332   3                  flag_REC = 0;
+ 333   3                  if (buff[0] == 'O' && buff[1] == 'N') //第一个字节为O，第二个字节为N，第三个字节为控制码
+ 334   3                      switch (buff[2])
+ 335   3                      {
+ 336   4                      case forward :                            // 前进
+ 337   4                          send_str_f();
+ 338   4                          run();
+ 339   4                          DisplayListChar(0, 1, clear);
+ 340   4                          DisplayListChar(0, 1, table_f);
+ 341   4                          break;
+ 342   4                      case backward:                        // 后退
+ 343   4                          send_str_b();
+ 344   4                          backrun();
+ 345   4                          DisplayListChar(0, 1, clear);
+ 346   4                          DisplayListChar(0, 1, table_b);
+ 347   4                          break;
+ 348   4                      case left:                        // 左转
+ 349   4                          send_str_l();
+ 350   4                          leftrun();
+ 351   4                          DisplayListChar(0, 1, clear);
+ 352   4                          DisplayListChar(0, 1, table_l);
+ 353   4                          break;
+ 354   4                      case right:                        // 右转
+ 355   4                          send_str_r();
+ 356   4                          rightrun();
+ 357   4                          DisplayListChar(0, 1, clear);
+ 358   4                          DisplayListChar(0, 1, table_r);
+ 359   4                          break;
+ 360   4                      case stop:                        // 停止
+ 361   4                          send_str_s();
+ 362   4                          stoprun();
+ 363   4                          DisplayListChar(0, 1, clear);
+ 364   4                          DisplayListChar(0, 1, table_s);
+C51 COMPILER V9.59.0.0   MAIN                                                              07/03/2024 22:43:26 PAGE 7   
+
+ 365   4                          break;
+ 366   4                      }
+ 367   3              }
+ 368   2          }
+ 369   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    686    ----
+   CONSTANT SIZE    =    202    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      7       4
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      2    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

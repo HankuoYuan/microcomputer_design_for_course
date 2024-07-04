@@ -1,0 +1,82 @@
+\section{硬件设计}
+HL-1 单片机实验板原理图如\autoref{HL-1开发板原理图}所示。
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width =0.9\textwidth]{figures/开发板原理图.png}
+    \caption{HL-1单片机实验板原理图}
+    \label{HL-1开发板原理图}
+\end{figure}
+\newline
+
+HL-1智能小车原理图如\autoref{HL-1智能小车原理图}所示。
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width =0.9\textwidth]{figures/智能小车原理图.png}
+    \caption{HL-1智能小车原理图}
+    \label{HL-1智能小车原理图}
+\end{figure}
+\newline
+
+HL-1智能小车和51开发板接线如下：
+
+\textbf{J3}
+\begin{itemize}
+    \item IN1--接到--实验板上的P1.2
+    \item IN2--接到--实验板上的P1.3
+    \item EN1--接到--实验板上的P1.4
+    \item EN2--接到--实验板上的P1.5
+    \item IN3--接到--实验板上的P1.6
+    \item IN4--接到--实验板上的P1.7
+\end{itemize}
+
+\textbf{J4}
+\begin{itemize}
+    \item IN5--接到--实验板上的P2.1
+    \item IN6--接到--实验板上的P2.0
+\end{itemize}
+
+\textbf{J5}
+\begin{itemize}
+    \item OUT1--接到--实验板上的P3.3
+    \item OUT2--接到--实验板上的P3.4
+    \item OUT3--接到--实验板上的P3.5
+    \item OUT4--接到--实验板上的P3.6
+\end{itemize}
+
+\textbf{实验板供电接线}
+
+\textbf{J5}
+\begin{itemize}
+    \item VCC--接到--实验板上的VCC引脚
+    \item GND--接到--实验板上的GND引脚
+\end{itemize}
+\begin{enumerate}
+    \item J6是超声波模块插座
+    \item J7是蓝牙模块插座
+    \item J8是蓝牙信号接到开发板的P3.0和P3.1
+    \item J17是车底盘四路5V对外供电接口
+\end{enumerate}
+
+\textbf{风扇模块}
+\begin{itemize}
+    \item GND接到车底盘J17接口的GND引脚
+    \item VCC接到车底盘J17接口的VCC引脚
+    \item IN引脚接到火焰传感器的S引脚
+\end{itemize}
+
+\textbf{火焰传感器}
+\begin{itemize}
+    \item GND接到车底盘J17接口的GND引脚
+    \item VCC接到车底盘J17接口的VCC引脚
+    \item  S 引脚接到风扇模块的IN引脚
+\end{itemize}
+
+其中火焰传感器在没有检测到火焰时S引脚输出高电平，检测到火焰则输出低电平；而风扇模块的IN引脚在收到低电平时启动风扇，高电平则关闭风扇。这两个模块结合在一起刚好可以自动检测火焰并吹灭，不需要单片机加以任何控制。
+
+
+
+
+
+
+
+

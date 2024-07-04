@@ -1,0 +1,170 @@
+A51 MACRO ASSEMBLER  MAIN                                                                 06/05/2024 19:03:48 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\main.obj
+ASSEMBLER INVOKED BY: D:\software\Keil_v5\C51\BIN\A51.EXE main.a51 SET(SMALL) DEBUG PRINT(.\Listings\main.lst) OBJECT(.\
+                      Objects\main.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     ORG 0000H
+0000 0130              2     AJMP START
+0030                   3     ORG 0030H
+0030                   4     START:
+0030 75D000            5         MOV PSW,#00H
+0033 758153            6         MOV SP,#53H
+0036 75A00E            7         MOV P2,#0EH
+0039 7580FF            8         MOV P0,#0FFH
+003C                   9     INIT:
+003C 758920           10         MOV TMOD,#20H;≈‰÷√∂® ±∆˜
+003F 758BFD           11         MOV TL1,#0FDH
+0042 758DFD           12         MOV TH1,#0FDH
+0045 7598C0           13         MOV SCON,#0C0H;≈‰÷√¥Æø⁄ƒ£ ΩŒ™∑Ω Ω3
+0048 D28E             14         SETB TR1
+004A                  15     LOOP:
+004A 75A00E           16         MOV P2,#0EH;…®√Ëµ⁄“ª¡–
+004D 308038           17         JNB P0.0,NUM0
+0050 30813B           18         JNB P0.1,NUM4
+0053 30823E           19         JNB P0.2,NUM8
+0056 308341           20         JNB P0.3,NUMC
+0059 75A00D           21         MOV P2,#0DH;…®√Ëµ⁄∂˛¡–
+005C 308041           22         JNB P0.0,NUM1
+005F 308144           23         JNB P0.1,NUM5
+0062 308247           24         JNB P0.2,NUM9
+0065 30834A           25         JNB P0.3,NUMD
+0068 75A00B           26         MOV P2,#0BH;…®√Ëµ⁄»¡–
+006B 30804A           27         JNB P0.0,NUM2
+006E 30814D           28         JNB P0.1,NUM6
+0071 308250           29         JNB P0.2,NUMA
+0074 308353           30         JNB P0.3,NUME
+0077 75A007           31         MOV P2,#07H;…®√Ëµ⁄Àƒ¡–
+007A 308053           32         JNB P0.0,NUM3
+007D 308156           33         JNB P0.1,NUM7
+0080 308259           34         JNB P0.2,NUMB
+0083 30835C           35         JNB P0.3,NUMF
+0086 014A             36         AJMP LOOP
+0088                  37     NUM0:;“‘œ¬ «º¸÷µœ‘ æ∫Õ∑¢ÀÕ
+0088 74C0             38         MOV A,#0C0H
+008A F590             39         MOV P1,A
+008C 01E8             40         AJMP TX
+008E                  41     NUM4:
+008E 7499             42         MOV A,#099H
+0090 F590             43         MOV P1,A
+0092 01E8             44         AJMP TX
+0094                  45     NUM8:
+0094 7480             46         MOV A,#080H
+0096 F590             47         MOV P1,A
+0098 01E8             48         AJMP TX
+009A                  49     NUMC:
+009A 74C6             50         MOV A,#0C6H
+009C F590             51         MOV P1,A
+009E 01E8             52         AJMP TX
+00A0                  53     NUM1:
+00A0 74F9             54         MOV A,#0F9H
+00A2 F590             55         MOV P1,A
+00A4 01E8             56         AJMP TX
+00A6                  57     NUM5:
+A51 MACRO ASSEMBLER  MAIN                                                                 06/05/2024 19:03:48 PAGE     2
+
+00A6 7492             58         MOV A,#092H
+00A8 F590             59         MOV P1,A
+00AA 01E8             60         AJMP TX
+00AC                  61     NUM9:
+00AC 7490             62         MOV A,#090H
+00AE F590             63         MOV P1,A
+00B0 01E8             64         AJMP TX
+00B2                  65     NUMD:
+00B2 74A1             66         MOV A,#0A1H
+00B4 F590             67         MOV P1,A
+00B6 01E8             68         AJMP TX
+00B8                  69     NUM2:
+00B8 74A4             70         MOV A,#0A4H
+00BA F590             71         MOV P1,A
+00BC 01E8             72         AJMP TX
+00BE                  73     NUM6:
+00BE 7482             74         MOV A,#082H
+00C0 F590             75         MOV P1,A
+00C2 01E8             76         AJMP TX
+00C4                  77     NUMA:
+00C4 7488             78         MOV A,#088H
+00C6 F590             79         MOV P1,A
+00C8 01E8             80         AJMP TX
+00CA                  81     NUME:
+00CA 7486             82         MOV A,#086H
+00CC F590             83         MOV P1,A
+00CE 01E8             84         AJMP TX
+00D0                  85     NUM3:
+00D0 74B0             86         MOV A,#0B0H
+00D2 F590             87         MOV P1,A
+00D4 01E8             88         AJMP TX
+00D6                  89     NUM7:
+00D6 74F8             90         MOV A,#0F8H
+00D8 F590             91         MOV P1,A
+00DA 01E8             92         AJMP TX
+00DC                  93     NUMB:
+00DC 7483             94         MOV A,#083H
+00DE F590             95         MOV P1,A
+00E0 01E8             96         AJMP TX
+00E2                  97     NUMF:
+00E2 748E             98         MOV A,#08EH
+00E4 F590             99         MOV P1,A
+00E6 01E8            100         AJMP TX
+00E8                 101     TX:;Ω¯––∆Ê≈ººÏ—È∏≥÷µ
+00E8 A2D0            102         MOV C,PSW.0
+00EA 929B            103         MOV TB8,C
+00EC F599            104         MOV SBUF,A;∏≥÷µ¥Æø⁄ª∫≥Â∆˜
+00EE 01F0            105         AJMP CONT
+00F0                 106     CONT:
+00F0 3099FD          107         JNB TI,CONT;≈–∂œ «∑Ò∑¢ÀÕ≥…π¶
+00F3 C299            108         CLR TI;«Â≥±Í÷æ
+00F5 014A            109         AJMP LOOP;Ã¯ªÿ≈–∂œ—≠ª∑
+                     110     END
+A51 MACRO ASSEMBLER  MAIN                                                                 06/05/2024 19:03:48 PAGE     3
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+CONT . . . . . . .  C ADDR   00F0H   A   
+INIT . . . . . . .  C ADDR   003CH   A   
+LOOP . . . . . . .  C ADDR   004AH   A   
+NUM0 . . . . . . .  C ADDR   0088H   A   
+NUM1 . . . . . . .  C ADDR   00A0H   A   
+NUM2 . . . . . . .  C ADDR   00B8H   A   
+NUM3 . . . . . . .  C ADDR   00D0H   A   
+NUM4 . . . . . . .  C ADDR   008EH   A   
+NUM5 . . . . . . .  C ADDR   00A6H   A   
+NUM6 . . . . . . .  C ADDR   00BEH   A   
+NUM7 . . . . . . .  C ADDR   00D6H   A   
+NUM8 . . . . . . .  C ADDR   0094H   A   
+NUM9 . . . . . . .  C ADDR   00ACH   A   
+NUMA . . . . . . .  C ADDR   00C4H   A   
+NUMB . . . . . . .  C ADDR   00DCH   A   
+NUMC . . . . . . .  C ADDR   009AH   A   
+NUMD . . . . . . .  C ADDR   00B2H   A   
+NUME . . . . . . .  C ADDR   00CAH   A   
+NUMF . . . . . . .  C ADDR   00E2H   A   
+P0 . . . . . . . .  D ADDR   0080H   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+PSW. . . . . . . .  D ADDR   00D0H   A   
+SBUF . . . . . . .  D ADDR   0099H   A   
+SCON . . . . . . .  D ADDR   0098H   A   
+SP . . . . . . . .  D ADDR   0081H   A   
+START. . . . . . .  C ADDR   0030H   A   
+TB8. . . . . . . .  B ADDR   0098H.3 A   
+TH1. . . . . . . .  D ADDR   008DH   A   
+TI . . . . . . . .  B ADDR   0098H.1 A   
+TL1. . . . . . . .  D ADDR   008BH   A   
+TMOD . . . . . . .  D ADDR   0089H   A   
+TR1. . . . . . . .  B ADDR   0088H.6 A   
+TX . . . . . . . .  C ADDR   00E8H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

@@ -1,0 +1,47 @@
+%!TeX program = xelatex
+\documentclass[12pt,a4paper,UTF8]{ctexart}
+\usepackage{swjtuReport}
+% 将一级标题改成“第1章”，若\arabic改成\chinese即为“第一章”
+% \usepackage{titletoc}
+% \ctexset{section={name={第,章},number={\arabic{section}}}}   
+
+\begin{document}
+%%------------------------------封面------------------------------%%
+\cover
+\thispagestyle{empty} % 首页不显示页码
+%%------------------------------摘要------------------------------%%
+\newpage
+\pagenumbering{Roman} % 重新计算页码，并将摘要、目录的页码设置成罗马数字页码
+
+\begin{abstract}\normalsize   % 更改摘要的内容的字体大小
+
+本课程设计报告详细介绍了“小车远程控制系统设计与实现”项目，该项目旨在通过蓝牙模块或红外遥控器实现智能小车的远程控制，涵盖行走、倒退、转弯等基本功能，同时利用LED灯或显示器件显示小车状态。报告首先概述了智能小车远程控制系统的当前技术状况，包括蓝牙、红外、Wi-Fi以及4G/5G等控制技术的应用，并探讨了LED显示与状态反馈、个性化功能拓展如自动避障和AI集成的发展趋势。硬件设计部分展示了HL-1单片机实验板与智能小车的原理图及接线方案，软件设计部分涉及代码调试与仿真。调试结果显示，小车能成功响应远程指令并执行相应动作。课设问题分析部分指出了小车硬件的局限性，提出了改进意见和未来研究方向，包括集成AI与机器学习、AR/VR技术、无线充电、物联网与大数据分析，以及强化安全性和隐私保护措施。最后，报告强调了智能小车对教育、健康、法律和文化的广泛影响，预示了其在社会生活和工业生产中的应用前景。
+
+\noindent \textbf{关键词：}
+微机原理；51单片机；智能小车；蓝牙模块；LCD屏显示
+
+\end{abstract}
+%%------------------------------目录页----------------------------%%
+\newpage
+% \pagenumbering{Roman} % 重新计算页码，并将摘要、目录的页码设置成罗马数字页码
+\begin{center}
+    \tableofcontents
+\end{center}
+%%------------------------------正文------------------------------%%
+\newpage
+\pagenumbering{arabic} % 重新计算页码，并将正文的页码设置成阿拉伯数字页码
+
+\include{chapters/1考核任务书}
+\include{chapters/2背景调研}
+\include{chapters/3硬件设计}
+\include{chapters/4软件设计}
+\include{chapters/5调试结果}
+\include{chapters/6课设问题分析}
+\include{chapters/7未来展望}
+
+%%------------------------------参考文献---------------------------%%
+\newpage
+\reference
+\addcontentsline{toc}{section}{参考文献}   % 将参考文献作为一级标题加入到目录
+
+\end{document}

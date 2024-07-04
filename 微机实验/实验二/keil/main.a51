@@ -1,0 +1,28 @@
+    ORG 0000H
+    LJMP MAIN
+    ORG 0030H
+MAIN:
+    MOV R1, #7
+    MOV A, #0FFH
+LOOP:
+    LJMP DELAY
+CPLP:
+    CPL A
+    MOV P2, A
+    DJNZ R1, LOOP
+OVERLOOP:
+    NOP
+    AJMP OVERLOOP
+DELAY:
+    MOV R4, #20
+LOOP0:
+    MOV R2, #200
+LOOP1:
+    MOV R3, #100
+LOOP2:
+    DJNZ R3, $
+LOOP3:
+    DJNZ R2, LOOP1
+    DJNZ R4, LOOP0
+    LJMP CPLP
+    END

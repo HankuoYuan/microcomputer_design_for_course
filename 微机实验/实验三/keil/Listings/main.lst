@@ -1,0 +1,79 @@
+A51 MACRO ASSEMBLER  MAIN                                                                 05/22/2024 00:38:12 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\main.obj
+ASSEMBLER INVOKED BY: D:\software\Keil_v5\C51\BIN\A51.EXE main.a51 SET(SMALL) DEBUG PRINT(.\Listings\main.lst) OBJECT(.\
+                      Objects\main.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     ORG 0000H
+0000 0130              2     AJMP MAIN
+0030                   3     ORG 0030H
+0030                   4         MAIN:
+0030 758160            5             MOV    SP,#60H;
+0033 74FE              6             MOV    A,#0FEH;置灯亮   11111110
+0035                   7         LOOP:
+0035 30B130            8             JNB P3.1,MODE2LOOP1;
+0038 30B027            9             JNB P3.0,ALLSTOP;
+003B 23               10             RL    A;
+003C F5A0             11             MOV P2, A;激活P1口
+003E 1155             12             ACALL    DELAY;进入延时，1S
+0040 30A702           13             JNB P2.7,LOOP2;
+0043 0135             14             AJMP    LOOP;返回LOOP循环
+0045                  15         LOOP2:
+0045 30B120           16             JNB P3.1,MODE2LOOP1;
+0048 30B017           17             JNB P3.0,ALLSTOP;
+004B 03               18             RR    A;
+004C F5A0             19             MOV P2, A;激活P1口
+004E 1155             20             ACALL    DELAY;进入延时，1S
+0050 30A0E2           21             JNB P2.0,LOOP;
+0053 0145             22             AJMP    LOOP2;返回LOOP循环
+0055                  23         DELAY:
+0055 7C14             24             MOV R4,#20;1us  12mHZ 机器时间周期为1us
+0057                  25         DEL1:
+0057 7E64             26             MOV R6,#100;1us T=(1+1+1+((250*2+2)*100+2)*20+2)=1004050us  1s
+0059                  27         DEL2:
+0059 7FFA             28             MOV    R7,#250;1us
+005B DFFE             29             DJNZ    R7,$;2us   循环250次 该语句消耗2微秒，一个机器周期
+005D DEFA             30             DJNZ    R6,DEL2;2us   每次减1，不等于0则跳转，该语句即为从Del1到这句，循环100次
+005F DCF6             31             DJNZ    R4,DEL1;2us   循环20次
+0061 32               32             RETI     ;2us
+0062                  33         ALLSTOP:
+0062 00               34             NOP;1us  12mHZ 机器时间周期为1us
+0063 20B0CF           35             JB P3.0,LOOP;
+0066 0162             36             AJMP ALLSTOP;
+0068                  37         MODE2LOOP1:
+0068 20B1CA           38             JB P3.1,LOOP;
+006B 30B0F4           39             JNB P3.0,ALLSTOP;
+006E 23               40             RL    A;
+006F F5A0             41             MOV P2, A;激活P1口
+0071 1155             42             ACALL    DELAY;进入延时，1S
+0073 0168             43             AJMP    MODE2LOOP1;返回LOOP循环
+                      44     END
+A51 MACRO ASSEMBLER  MAIN                                                                 05/22/2024 00:38:12 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+ALLSTOP. . . . . .  C ADDR   0062H   A   
+DEL1 . . . . . . .  C ADDR   0057H   A   
+DEL2 . . . . . . .  C ADDR   0059H   A   
+DELAY. . . . . . .  C ADDR   0055H   A   
+LOOP . . . . . . .  C ADDR   0035H   A   
+LOOP2. . . . . . .  C ADDR   0045H   A   
+MAIN . . . . . . .  C ADDR   0030H   A   
+MODE2LOOP1 . . . .  C ADDR   0068H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+P3 . . . . . . . .  D ADDR   00B0H   A   
+SP . . . . . . . .  D ADDR   0081H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

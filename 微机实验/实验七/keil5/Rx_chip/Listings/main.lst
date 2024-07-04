@@ -1,0 +1,69 @@
+A51 MACRO ASSEMBLER  MAIN                                                                 06/05/2024 19:03:43 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\main.obj
+ASSEMBLER INVOKED BY: D:\software\Keil_v5\C51\BIN\A51.EXE main.a51 SET(SMALL) DEBUG PRINT(.\Listings\main.lst) OBJECT(.\
+                      Objects\main.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     ORG 0000H
+0000 0130              2     AJMP START
+0030                   3     ORG 0030H
+0030                   4     START:
+0030 758920            5         MOV TMOD,#20H;≈‰÷√∂® ±∆˜
+0033 758BFD            6         MOV TL1,#0FDH
+0036 758DFD            7         MOV TH1,#0FDH
+0039 7598D0            8         MOV SCON,#0D0H;≈‰÷√¥Æø⁄ƒ£ ΩŒ™∑Ω Ω3£¨≤¢ πƒ‹REN
+003C D28E              9         SETB TR1
+003E                  10     LOOP:
+003E 109802           11         JBC RI,RECE;≈–∂œΩ” ’±Í÷æ
+0041 80FB             12         SJMP LOOP     ; »ÙŒ¥Ω” ’µΩ æ›‘ÚºÃ–¯≤È—Ø
+0043                  13     RECE:
+0043 E599             14         MOV A, SBUF   ; ∂¡»°SBUF÷–µƒ æ›µΩ¿€º”∆˜A
+0045 20D005           15         JB PSW.0,ONEE;∂‘Ω” ’µΩµƒ æ›Ω¯––∆Ê≈º–£—È
+0048 209A0D           16         JB RB8,ERROR;
+004B 0152             17         AJMP RIGHT
+004D                  18     ONEE:
+004D 309A08           19         JNB RB8,ERROR
+0050 0152             20         AJMP RIGHT
+0052                  21     RIGHT:
+0052 F5A0             22         MOV P2,A     ; Ω´Ω” ’µΩµƒ æ› ‰≥ˆµΩP2ø⁄
+0054 C298             23         CLR RI        ;«Â≥Ω” ’±Í÷æ
+0056 013E             24         AJMP LOOP;Ã¯ªÿΩ” ’≈–∂œ—≠ª∑
+0058                  25     ERROR:
+0058 B280             26         CPL P0.0;Ω” ’¥ÌŒÛ∫Û»°∑¥p0.0ø⁄…¡√led
+005A 013E             27         AJMP LOOP;Ã¯ªÿΩ” ’—≠ª∑‘Ÿ¥ŒΩ” ’
+                      28     END
+A51 MACRO ASSEMBLER  MAIN                                                                 06/05/2024 19:03:43 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+ERROR. . . . . . .  C ADDR   0058H   A   
+LOOP . . . . . . .  C ADDR   003EH   A   
+ONEE . . . . . . .  C ADDR   004DH   A   
+P0 . . . . . . . .  D ADDR   0080H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+PSW. . . . . . . .  D ADDR   00D0H   A   
+RB8. . . . . . . .  B ADDR   0098H.2 A   
+RECE . . . . . . .  C ADDR   0043H   A   
+RI . . . . . . . .  B ADDR   0098H.0 A   
+RIGHT. . . . . . .  C ADDR   0052H   A   
+SBUF . . . . . . .  D ADDR   0099H   A   
+SCON . . . . . . .  D ADDR   0098H   A   
+START. . . . . . .  C ADDR   0030H   A   
+TH1. . . . . . . .  D ADDR   008DH   A   
+TL1. . . . . . . .  D ADDR   008BH   A   
+TMOD . . . . . . .  D ADDR   0089H   A   
+TR1. . . . . . . .  B ADDR   0088H.6 A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

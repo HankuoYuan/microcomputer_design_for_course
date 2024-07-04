@@ -1,0 +1,117 @@
+A51 MACRO ASSEMBLER  MAIN                                                                 05/24/2024 14:59:24 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\main.obj
+ASSEMBLER INVOKED BY: D:\software\Keil_v5\C51\BIN\A51.EXE main.a51 SET(SMALL) DEBUG PRINT(.\Listings\main.lst) OBJECT(.\
+                      Objects\main.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     ORG 0000H 
+0000 0130              2     AJMP 0030H 
+0003                   3     ORG 0003H;ÖÐ¶Ï0´úÂëÌø×ª
+0003 02007E            4     LJMP INTRUPT0
+0013                   5     ORG 0013H ;ÖÐ¶Ï1´úÂëÌø×ª
+0013 02006E            6     LJMP HA2S3 
+0030                   7     ORG 0030H ;ÉèÖÃÖ÷³ÌÐòÆðµã
+0030                   8     HA2S: 
+0030 7590FF            9         MOV P1,#0fFH ;ÉèÖÃP1³õÖµ
+0033 43B000           10         ORL P3,#00H ;³õÊ¼»¯P3¿ÚµÄÖµ
+0036 75D000           11         MOV PSW,#00H 
+0039 758153           12         MOV SP,#53H
+003C 74FF             13         MOV A,#0FFH
+003E 7905             14         MOV R1,#05;ÖØÖÃµÆµÄÉÁµÄ´ÎÊ
+0040                  15     HA2S1: 
+0040 20B4FD           16         JB P3.4,HA2S1;ÅÐ¶Ï°´¼üp3.4µÄ×´Ì¬£¬°´ÏÂÆô¶¯Á÷Ë®µÆ
+0043 43B804           17         ORL IP,#04H 
+0046 43A885           18         ORL IE,#85H 
+0049                  19     HA2S2: ;Á÷Ë®µÆÑ­»·
+0049 759081           20         MOV P1,#081H
+004C 1196             21         ACALL HA2S7 
+004E 759082           22         MOV P1,#082H 
+0051 1196             23         ACALL HA2S7 
+0053 759084           24         MOV P1,#084H 
+0056 1196             25         ACALL HA2S7 
+0058 759088           26         MOV P1,#088H 
+005B 1196             27         ACALL HA2S7 
+005D 759090           28         MOV P1,#090H 
+0060 1196             29         ACALL HA2S7 
+0062 7590A0           30         MOV P1,#0A0H 
+0065 1196             31         ACALL HA2S7 
+0067 7590C0           32         MOV P1,#0C0H 
+006A 1196             33         ACALL HA2S7 
+006C 80DB             34         SJMP HA2S2 
+006E 8AF0             35     HA2S3: MOV B,R2 ;ÖÐ¶Ï1²¿·Ö´úÂë
+0070 D297             36     HA2S5: SETB P1.7 ;ÉèÖÃp1.7Îª1
+0072 1191             37         ACALL HA2S6 
+0074 B297             38         CPL P1.7 ;È¡·´P1.7
+0076 1191             39         ACALL HA2S6 
+0078 30B3F5           40         JNB P3.3,HA2S5 
+007B AAF0             41         MOV R2,B 
+007D 32               42         RETI
+007E                  43     INTRUPT0:;ÖÐ¶Ï0²¿·Ö´úÂë
+007E F590             44         MOV P1,A
+0080 1196             45         ACALL HA2S7
+0082 759080           46         MOV P1,#80H
+0085 1196             47         ACALL HA2S7
+0087 D9F5             48         DJNZ R1,INTRUPT0
+0089 7905             49         MOV R1,#05;ÖØÖÃµÆµÄÉÁµÄ´ÎÊ
+008B 018D             50         AJMP OVERSTOP
+008D                  51     OVERSTOP:
+008D 30B2FD           52         JNB P3.2,OVERSTOP
+0090 32               53         RETI
+0091 7A06             54     HA2S6: MOV R2,#06H ;¶ÌÑÓÊ±
+0093 119B             55         ACALL DELAY 
+0095 22               56         RET 
+0096 7A30             57     HA2S7: MOV R2,#30H ;³¤ÑÓÊ±
+A51 MACRO ASSEMBLER  MAIN                                                                 05/24/2024 14:59:24 PAGE     2
+
+0098 119B             58         ACALL DELAY 
+009A 22               59         RET 
+009B C002             60     DELAY: PUSH 02H ;ÑÓÊ±×Ó³ÌÐò
+009D C002             61     DELAY1: PUSH 02H 
+009F C002             62     DELAY2: PUSH 02H 
+00A1 DAFE             63     DELAY3: DJNZ R2,DELAY3 
+00A3 D002             64         POP 02H 
+00A5 DAF8             65         DJNZ R2,DELAY2 
+00A7 D002             66         POP 02H 
+00A9 DAF2             67         DJNZ R2,DELAY1 
+00AB D002             68         POP 02H 
+00AD DAEC             69         DJNZ R2,DELAY 
+00AF 22               70         RET
+                      71     END
+A51 MACRO ASSEMBLER  MAIN                                                                 05/24/2024 14:59:24 PAGE     3
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+B. . . . . . . . .  D ADDR   00F0H   A   
+DELAY. . . . . . .  C ADDR   009BH   A   
+DELAY1 . . . . . .  C ADDR   009DH   A   
+DELAY2 . . . . . .  C ADDR   009FH   A   
+DELAY3 . . . . . .  C ADDR   00A1H   A   
+HA2S . . . . . . .  C ADDR   0030H   A   
+HA2S1. . . . . . .  C ADDR   0040H   A   
+HA2S2. . . . . . .  C ADDR   0049H   A   
+HA2S3. . . . . . .  C ADDR   006EH   A   
+HA2S5. . . . . . .  C ADDR   0070H   A   
+HA2S6. . . . . . .  C ADDR   0091H   A   
+HA2S7. . . . . . .  C ADDR   0096H   A   
+IE . . . . . . . .  D ADDR   00A8H   A   
+INTRUPT0 . . . . .  C ADDR   007EH   A   
+IP . . . . . . . .  D ADDR   00B8H   A   
+OVERSTOP . . . . .  C ADDR   008DH   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P3 . . . . . . . .  D ADDR   00B0H   A   
+PSW. . . . . . . .  D ADDR   00D0H   A   
+SP . . . . . . . .  D ADDR   0081H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)
